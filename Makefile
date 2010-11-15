@@ -8,4 +8,4 @@ default: all
 
 all: topology.pdf
 
-topology.pdf: topology.tex diagrams.sty
+topology.pdf: topology.tex catmacros.tex
