@@ -1,0 +1,715 @@
+
+\documentclass{article}
+\usepackage{diagrams}
+\usepackage{amsmath, amssymb}
+\input{catmacros.tex}
+
+\title{Short Introduction to Topology\\{\small For Computer
+    Science Grad Students\\\tiny and other people who don't give a crap
+    about topology}\\{\small {\bf DRAFT} version 0.6}}
+\author{Mark Jason Dominus ({\tt mjd@plover.com})}
+
+\def\R{{\mathbb R}}
+\def\Rn{{\R^n}}
+\def\ball#1#2{B_{#1}({#2})}
+\newcounter{exercisecounter}\setcounter{exercisecounter}{1}
+\def\Exercise.#1\par{{\item\small {\bf Exercise \number\theexercisecounter}.#1\addtocounter{exercisecounter}{1}}}
+
+% \def\comp#1{{#1}^C}
+% \def\inter#1{{#1}^\circ}
+% \def\clos#1{{#1}^\bullet}
+% \def\closclos#1{{#1}^{\bullet\bullet}}
+% \def\closcomp#1{{#1}^{C\bullet}}
+% \def\compclos#1{{#1}^{\bullet C}}
+% \def\intercomp#1{{#1}^{C\circ}}
+% \def\compinter#1{{#1}^{\circ C}}
+
+\def\comp#1{\smash{#1}^C\vphantom{#1}}
+\def\inter#1{\smash{#1}^\circ\vphantom{#1}}
+\def\clos#1{\smash{#1}^\bullet\vphantom{#1}}
+\def\closclos#1{\clos{\clos{#1}}}
+\def\closcomp#1{\clos{\comp{#1}}}
+\def\compclos#1{\comp{\clos{#1}}}
+\def\intercomp#1{\inter{\comp{#1}}}
+\def\compinter#1{\comp{\inter{#1}}}
+
+\def\imp{\rightarrow}           % Logical implication
+\def\bind{{\tt >>=}}            % Haskell Monad bind operator
+
+
+\begin{document}
+\maketitle
+
+\abstract{\tiny This document is a {\bf draft}, circulated only to
+attract comment and correction.  It contains numerous errors of
+fact, vague overgeneralizations, and misleading implications.  Many
+claims about general topological spaces in fact apply only to
+Hausdorff spaces.  Much of the Applications section should be
+considered placeholders that bear only a vague resemblance to the
+correct, accurate explanations.  Readers not already familiar with
+topology may come away with severe misapprehensions.  Do not rely on
+it for anything.
+
+Please send comments, suggestions, and corrections to the author at
+{\tt mjd@plover.com}.
+
+Please do not distribute this draft after {\bf 15 December, 2010}.  The
+most recent version is available at {\tt http://blog.plover.com/math/topology-doc.html}.
+
+}
+
+\bigskip
+%\begin{center}
+%{\small (These notes contain at least one error.  How many can you find?)}
+%\end{center}
+\parskip 1ex
+
+Topology is the branch of mathematics that tries to understand
+continuity and continuous functions.  You probably don't need to know
+much topology for your CS degree, but people will bring it up from
+time to time.  For example, you will hear in your category theory
+class that topological spaces form a category with continuous
+functions as the arrows.  Or you will hear that certain topological
+spaces are natural models for intuitionistic logic.  The goal of these
+notes is to be the minimal explanation of topology that will enable
+you to understand those two things.
+
+On the real line, continuity is defined in terms of distance: a
+function from $\R$ to $\R$ is {\em continuous\/} if points that were
+sufficiently close together in the domain are mapped to points that
+are close together in the codomain.  The use of ``close together''
+implies a distance function, which in $\R$ is simply $|x-y|$.  But what
+about spaces that are more complex, for which distance doesn't make
+sense, or where no distance function is apparent?
+
+Topology reformulates this idea of ``closeness'' in terms of special
+sets called ``open sets''.
+
+\section*{Open sets}
+
+The single fundamental concept of topology is the ``open set''.
+
+You probably already know that in $\R$, an {\em open interval} is a set
+of them form $\{x : a < x < b \}$ for some real $a$ and $b$.  This
+interval is written $(a, b)$.  An {\em open set in $\R$} is a union of
+open intervals.  The union might be infinite.  For example, $\{ x : x
+> 0 \}$ is an open set because it is the union of the intervals $(0,
+n)$ for all positive $n$.  $\R$ itself is open, and the empty set is
+also considered open, because it's an empty union of intervals.
+
+This generalizes to $\Rn$ as follows: An {\em open ball\/} is the set
+of all points $x$ whose distance from some center point $p$ is less
+than some radius $\epsilon$.  In $\R$, an open ball is nothing but an
+open interval.  (In $\R^3$, open balls are actually ball-shaped.)  An
+open set in $\Rn$ is a union of open balls.
+
+% The important thing about an open set is that points can be very close
+% to the set without being in it.  For example, consider $I^\circ = (0,
+% 1)$.  0 is not in $I$, but you can find points that are in $I$
+% arbitrarily close to 0.  This is quite different from the {\em
+%   closed\/} interval $I = \{ x : 0 \le x \le 1 \}$.  There is no point
+% outside of $I$ with the analogous property.  So open sets give us a
+% way to talk about ``closeness'' without having to concern ourselves
+% directly with distance measures.
+
+Open sets are topology's generalization of the analytic notion of
+``close together''.  In topology, two entities are ``close'' if every
+open set containing one intersects the other one.  They are boundedly
+far apart if there are disjoint open sets around them.
+
+\section*{Topologies}
+
+A {\em topological space\/} is a set $X$ equipped with an open set
+structure.  That is, we pick out some of the subsets of $X$ and
+designate them as ``open''.  The collection of ``open'' subsets of $X$
+that we designate is called the {\em topology\/} of the space.
+Since a topology is supposed to be a collection of open sets, its
+members are required to satisfy certain properties that are analogous
+to those satisfied by open sets in $\Rn$:
+
+\label{topology-def}
+\begin{enumerate}
+\item $X$ itself must be open, and $\varnothing$ must be open
+\item \label{open-u} Any union of open sets must be open
+\item \label{open-i} The intersection of any two open sets must be open
+\end{enumerate}
+
+Property \ref{open-i} implies that any finite intersection
+of open sets must be open, by induction.  But infinite intersections
+might {\em not\/} be open.  This matches the behavior of $\Rn$, where finite
+intersections of open sets are open, but infinite intersections are
+sometimes not.  For example, the intersection of the open sets $(-x,
+x)$ for all positive reals $x$ is the set $\{0\}$, which is not
+open.  In contrast, the union described in property \ref{open-u} can be any
+union whatever, even a huge uncountable union.
+
+This is obviously a very general definition, and the usual practice
+here would be to present a number of examples, some of which would be
+very weird.  I am not going to do that.  $\Rn$ is the only example you
+need to remember.  But keep in mind that the definition {\em is\/}
+very general, and applies in all sorts of surprising places and
+spaces.  The end of these notes will discuss a couple of examples of that.
+
+With the definition in place we can define a number of topological
+properties, such as interiors, boundaries, limits, continuous
+functions, and so on, which are generalizations of those properties in
+$\Rn$.
+
+I will present a few of these, and then talk about computer science
+and logic.
+
+\section*{Connected sets}
+
+A ``connected'' set is one that is in all one piece.  For example,
+intervals in $\R$ are connected, and $\R$ itself is connected, but the
+set $(0,1)\cup(2,3)$ is not (it's in two pieces) and the set of
+integers is not (it's in many pieces).
+
+To prove that a set is not connected, we find a ``separation'' of it:
+we split the set into two nonempty, disjoint pieces that have some
+space in between.  Mere disjointness is not sufficient for separation.
+After all, we can split $\R$ itself into two pieces $\{x : x<0\}$ and
+$\{x : x\ge0\}$ which are disjoint. But the two pieces touch each
+other, and their union is $\R$, which is connected.  We want to say
+that in a separation the two pieces are boundedly far apart.
+
+The way we express this in topology is to say that the two pieces are
+separated if they are contained in disjoint open sets.  We can't find
+disjoint open sets containing $\{x : x<0\}$ and $\{x : x\ge0\}$,
+because every open set that contains $\{x : x\ge0\}$ must also contain
+some negative numbers.  And one can show that $\R$ is connected, as it
+should be.  In fact it follows directly from the definition of $\R$
+that it is connected.\footnote{If you know the definition of $\R$ in
+terms of Dedekind cuts, you should be able to see this.}
+
+So let's define a connected set: A {\em separation} of a set $S$ is a
+partition of $S$ into two disjoint parts, $X$ and $Y$, such that there
+are disjoint open sets $X'$ and $Y'$ with $X\subset X'$ and $Y \subset
+Y'$.  A set is {\em disconnected\/} if there is a separation of it,
+and {\em connected\/} if not.
+
+% Whenever you see a definition in topology, the first thing you should
+% do is to think about what it means in $\R$.  Topology was invented to
+% help mathematicians understand the structure of $\R$.  $\R$ is the first
+% and most important example of every elementary topological concept.
+
+Under this definition, is $\R\backslash\{0\}$ connected or
+disconnected?  Disconnected, of course.  The separation is obvious:
+$X$ is the positive reals, $Y$ is the negative reals, $X'=X$ is an
+open set containing $X$, and $Y'=Y$ is an open set containing $Y$ that
+is disjoint from $X'$.
+
+\begin{itemize}
+\Exercise. No finite subset of $\R$ is connected.
+
+\Exercise. $\mathbb Q$, the set of rationals, is not connected.
+
+\end{itemize}
+
+%% There are other ways to define connectedness.  For example, we might
+%% say that a set $S$ is connected if, for every $p, q\in S$, there is a
+%% continuous mapping $f : [0, 1] \mapsto S$ with $f(0) = p$ and $f(1) =
+%% q$.  Topologists call this property ``path-connectedness''.  It is
+%% less general than the definition I gave before because it fails for
+%% certain extremely large connected sets.  Imagine a space that looks
+%% locally like $\R$, but instead of having a countable number of copies of
+%% $[0, 1)$ stuck together, it has an uncountable number of copies.
+
+\section*{Limits}
+
+Let $S$ be a set in a topological space.  A point $p$ is called a {\em
+  limit point\/} of $S$ if it is arbitrarily close to the rest of $S$.
+As usual, the notion of ``arbitrarily close to'' is formulated in
+terms of open sets.  The formal definition is that a point $p$
+(whether in $S$ or not) is a limit point of $S$ if every open set that
+contains $p$ also intersects some point of $S$ other than $p$.
+
+Let's think about limit points in $\R$.  We have some set, say
+$I^\circ = (0,1)$.  When is $p$ a limit point of $I^\circ$?  Well, every point
+$x$ in $I^\circ$ is a limit point, because every open set containing
+$x$ contains some open interval around $x$, which then intersects
+$I^\circ$ in some point close to but not equal to $x$.
+
+But also, 0 and 1 are limit points of $I^\circ$, because every open
+interval around 0 intersects $I^\circ$, and 1 similarly.
+
+No other points of $\R$ are limit points of $I^\circ$.  Consider $-1$
+for example.  Not every open set containing $-1$ intersects $I^\circ$.
+$(-1.5, -0.5)$ is a counterexample.
+
+% Limit points are sometimes called ``accumulation points'', because
+% they're the places near which many of the points of the set $S$ pile up.
+
+Let's consider another example, $S = \{1, \frac12, \frac13, \ldots\}$. 
+None of the points of $S$ are limit points, because for each
+point $p\in S$, it's possible to find a small open interval around $p$
+that does not intersect $S$ anywhere else.  But the point 0 is a limit
+point of $S$, because every open interval around 0 intersects some
+points of $S$.  0 is indeed the limit of the sequence $\left< 1, \frac12,
+\frac13, \ldots\right>$, which explains the name ``limit point''.
+
+\begin{itemize}
+\Exercise. A finite subset of $\R^n$ has no limit points.
+
+\Exercise. If $S$ is a sequence in $\Rn$ that converges to $p$, then $p$
+is a limit point of the range of $S$.
+
+\Exercise. But the range of $S$ might have limit points even if $S$ does not converge.
+
+\Exercise. Which points of $\R^2$ are limit points of an open disc?
+Which points are limit points of a closed disc?
+
+\end{itemize}
+
+As we saw with $I^\circ$, limit points of a set might be in the set,
+or not.  A set which contains all its limit points is called a {\em
+  closed\/} set.  The union of a set $S$ with its set of limit points
+is called the {\em closure\/} of $S$, written $\clos S$.  The name
+``closed'' was chosen because, in $\R$, the closure of an open interval
+$(a, b)$ is the the closed interval $[a, b]$, and in $\Rn$, the closure of
+an open disc is a closed disc.
+
+\begin{itemize}
+\Exercise. Some sets are both open and closed.
+
+\Exercise. Some sets are neither open nor closed.
+
+\Exercise. The closure of a set is a closed set.
+
+\Exercise. if $S$ is a closed set, then $\clos S = S$.
+
+\Exercise. Every closed set $S$ is the closure of some set $S'$. 
+
+\end{itemize}
+
+If $A\subset B$, and $\clos A = B$, we say that
+$A$ is {\em dense in $B$}: every point of $B$ is ``close to'' many
+points of  $A$.  The canonical example of this is:
+
+\begin{itemize}
+\Exercise. $\mathbb Q$ is dense in $\R$.
+
+\end{itemize}
+
+Probably the most important theorem about closed sets is that a set is
+closed if and only if its complement is open.    This is
+true on $\R$ for the usual meanings of ``closed'' and ``open''.  For
+example, the complement of the closed interval $[0, 1]$ is the open
+set $(-\infty, 0) \cup (1, \infty)$.
+
+This theorem is so important that it's the only one I'm going to prove
+in this whole document.  Let $G$ be an open set and $H$ be its
+complement.  I want to show that $H$ is closed.  Let $p$ be a limit
+point of $H$.  I want to show that $p\in H$.  Since $p$ is a limit
+point of $H$, every open set containing $p$ must intersect $H$.  $G$
+is an open set not intersecting $H$, so $p\not\in G$, so $p\in H$.
+
+Now conversely, suppose $H$ is a closed set and $G$ is its
+complement.  I want to show that $G$ is open.  For each $p\in G$, $p$
+is not a limit point of $H$, so there is some open set $G_p$ that
+contains $p$ and does not intersect $H$.  Since each $G_p$ is disjoint
+from $H$, each is a subset of $G$.   Let $G'=\bigcup G_p$.  $G'$ is a
+union of open sets, so is open.
+$G'\subset G$, because $G'$ is a union of subsets of $G$.  
+$G\subset G'$ because $p\in G_p\subset G'$ for each $p\in G$.
+So $G=G'$, and since $G'$ is open, so is $G$.
+
+\begin{itemize}
+\Exercise. The closure of a set $S$ is the smallest closed set $C$
+with $S\subset C$.
+
+\Exercise. The closure of a set $S$ is the intersection of all closed sets $C$
+with $S\subset C$.
+
+
+\end{itemize}
+
+One reason that closed sets are important in analysis because of the
+{\em Heine-Borel theorem:\/} A continuous function on a closed,
+bounded set has bounded values.  This is not true of continuous
+functions on bounded sets in general.  For example, the function $x
+\mapsto 1/x$ on the bounded set $(0, 1)$ is continuous but not
+bounded.
+
+The topological version of the Heine-Borel theorem replaces ``closed,
+bounded set'' with ``compact set''.  (In $\Rn$, these are equivalent.)
+Compactness is probably the most important topological concept that
+I'll omit from these notes.
+
+\subsection*{Boundaries}
+
+We saw that sometimes some of the limit points of a set are in the
+set, and some are not.  But the limit points that are not in the set
+are close to it.  That is the source of the topological definition of
+a boundary: The {\em boundary\/} of a set $S$ is the set of points
+that are limit points of both $S$ and its complement.
+
+\begin{itemize}
+\Exercise. The boundary of an open interval $(a, b)$ is the set $\{a, b\}$.
+
+\Exercise. The boundary of a closed interval $[a, b]$ is the set $\{a, b\}$.
+
+\Exercise. The boundary of the open ball $\{(x,y,z) : x^2 + y^2 + z^2 <
+1\}$ in $\R^3$ is the sphere  $\{(x,y,z) : x^2 + y^2 + z^2 = 1\}$.   So
+is the boundary of the closed ball. 
+
+\Exercise. The boundary of an open set $S$ is the intersection of the
+closure of $S$ and the closure of the complement of $S$.
+
+\end{itemize}
+
+Topology also defines the {\em interior\/} of a set, which is dual to
+the closure of the set.  The interior of a set $S$, written $\inter
+S$, is the points in $S$ that are {\em not\/} on the boundary.
+
+\begin{itemize}
+\Exercise. $\inter S$ is open.
+
+\Exercise. If $S$ is open, then $S = \inter S$.
+
+\Exercise. $\inter S$ is the largest open set $G$ with $G\subset S$.
+
+\Exercise. The interior of a closed ball in $\Rn$ is an open ball.  
+
+\Exercise. Write $\comp S$ for the complement of set $S$.  $\compinter S = \closcomp S$, and
+$\compclos S = \intercomp S$.
+
+\end{itemize}
+
+\section*{Continuity}
+
+In analysis, a function is continuous if you can make the image in the
+codomain as small as you like, by choosing a small enough part of the
+domain.  That is, a function $f$ is continuous if, given a subset $C$
+of the codomain that is contained in some small open set $C'$, we can
+find a small open set $D'$ in the domain such that $p\in D'$ implies
+that $f(p)\in C$.  This motivates the following topological definition
+of continuity:
+
+Suppose $A$ and $B$ are topological spaces.  A function $f : A\to B$
+is {\em continuous\/} if $f^{-1}(R)$ is open whenever $R$ is open.
+($f^{-1}(R)$ is the set of all points of the domain of $f$ that map to
+points of $R$.  That is, $f^{-1}(R) = \{ x : f(x)\in R \}$.)
+
+\begin{itemize}
+\Exercise. The identity function is continuous.
+
+\Exercise. Constant functions are continuous.
+
+\Exercise. Compositions of continuous functions are continuous.
+
+\Exercise. Continuous functions of connected sets have connected images.
+
+\Exercise. Continuous functions of open sets are {\em not\/} necessarily open.
+
+\Exercise. The analytic definition of continuity on $\Rn$ coincides with the
+topological definition.
+
+\end{itemize}
+
+\subsection*{Homeomorphic spaces}
+
+If there's a bijective mapping between two sets $A$ and $B$ that is
+continuous in both directions (that is, both $f$ and $f^{-1}$ are
+continuous) then there is a bijection between the open sets of $A$ and
+$B$, and so they have the same open set structure.  Since all
+topological properties are formulated in terms of open sets, $A$ and
+$B$ have exactly the same topological properties, and are
+topologically equivalent.  The topology jargon for this is that they
+are {\em homeomorphic\/}, and the bijective mapping is a {\em 
+homeomorphism\/}. 
+
+Topologists do not distinguish between different homeomorphic
+spaces.
+
+\begin{itemize}
+\Exercise.  Even though $(0,1)$ and $\R$ are geometrically quite
+different, they are topologically equivalent.
+
+\end{itemize}
+
+\section*{Applications}
+
+\subsection*{The category of topological spaces}
+
+One basic example of a category is the category $\cat{Top}$ of
+topological spaces.  The objects are topological spaces, that is, each
+object is a set $X$ equipped with a topology $T$, which is a
+collection of open sets satisfying the open-sets properties I listed
+back on page \pageref{topology-def}.  The arrows are continuous
+functions between these spaces.
+
+When we have an arrow $f : X\to Y$ and an arrow $g : Y\to X$ that are
+inverses, then $f$ and $g$ are bijections, and the spaces are
+homeomorphic.  In the categorial view, the objects are isomorphic.
+Indeed, this is one of the main examples of isomorphic objects.  They
+may be different sets, but a topologist doesn't care.  
+
+% For example, let $X$ be $\R^2$ with the usual topology.  Let $Y$ be
+% the set of points $Y = \{(x, y, z)  \in \R^3 : x^2 + y^2 + z^2 = 1 \}
+% \backslash \{ (0,0,1) \}$, with the rule that a subset $G$ of this is open
+% whenever there is an open set $G'\subset\R^3$ with $G=G'\cap Y$.  That
+% is, it's a sphere with the north pole removed, and the open sets are
+% just the ordinary open sets of $\R^3$, restricted to the sphere.
+% These spaces are homeomorphic.  They are both connected.  Neither is
+% compact.  Etc.  Any topological property possessed by one space is
+% possessed by the other, and any topological property lacked by $X$ is
+% also lacked by $Y$.
+
+This category was an important motivator for category theory in the
+first place.  Suppose you want to show that two topological spaces,
+say a torus and a sphere, are not homeomorphic.  One way is to find a
+topological property that one has that the other does not.  
+
+An important topological property is the ``fundamental group'' of a
+space.  Without getting into too many details, one chooses a ``base
+point'' $x$ in the space, and considers the set of loops that start
+and end at $x$. Loops are considered equivalent if one can be smoothly
+transformed into the other.  It turns out that the choice of base
+point doesn't matter, at least for connected sets.  One can then put a
+group structure on the equivalence classes of loops in a
+straightforward way.  The group operation is essentially concatenation
+of loops.  This group is called the fundamental group of the space.
+
+On a sphere, all the loops fall into a single equivalence class,
+because any loop can be contracted smoothly down to a single point.
+So the resulting group has only one element.\footnote{A space whose
+  fundamental group is trivial is called ``simply connected''.}
+
+But the fundamental group of a torus is quite different.  Consider a
+very small loop $a$ on the side of the torus.  Such a loop can be
+shrunk to a point.  But now consider a larger loop $b$ that starts on
+the outside edge, goes around through the hole, and comes back to the
+outside. Such a loop cannot get any smaller, so $a$ and $b$ are
+different.  This shows that the group is nontrivial.  In fact the
+fundamental group of the torus is $\mathbb Z^2$.  This proves that
+the torus is not a sphere.
+
+% Would disc vs circle be a better example here?  It is much easier to
+% see that the fg of the circle is Z than that the fg of the torus is z^2.
+
+I bring this up because this fundamental group construction is
+precisely a functor, one which maps the category of topological spaces
+to the category of groups. It is one of the very first functors ever
+considered as such.  The study of such functors from $\cat{Top}$ to
+various categories of algebraic structures such as $\cat{Grp}$ is
+called {\em algebraic topology\/}.
+
+\subsection*{Models of intuitionistic logic}
+
+Classical logic can be modeled with boolean algebras.  The typical
+approach is to take the trivial boolean algebra, which has only two
+elements, $\top$ (true) and $\bot$ (false).  A {\em valuation\/} is an
+assignment of one of these values to each propositional variable.
+This then extends to a truth value for every propositional formula: 
+
+\begin{itemize}
+\item $v(f\vee g) = \bot$, if $v(f) = \bot$ and $v(g) = \bot$;
+  otherwise $\top$
+\item $v(f\wedge g) = \top$, if $v(f) = \top$ and $v(g) = \top$;
+  otherwise $\bot$
+\item $v(f\imp g) = \bot$, if $v(f) = \top$ and $v(g) = \bot$;
+  otherwise $\top$
+\item $v(\neg f) = \bot$, if $v(f) = \top$; otherwise $\bot$
+\end{itemize}
+
+A formula is a {\em tautology\/} if it has a value of $\top$
+regardless of how you assign values to the variables.  That is,
+tautologies are those formulas to which every valuation assigns a
+value of $\top$.  The tautologies are precisely the theorems of
+classical logic.
+
+This is nothing more than a formalization of the method of truth
+tables.  Each line in the truth table represents one valuation.  You
+calculate the value of your formula for each valuation, and if it is
+$\top$ on every line, the formula is a tautology.
+
+One can generalize this.  Choose a set $X$.  We will assign valuations
+which are subsets of $X$.  Extend the valuation to formulas by saying
+that $v(f\vee g) = v(f)\cup v(g)$ and $v(f\wedge g) = v(f)\cap v(g)$.
+Say that tautologies are those which are assigned the value $X$ by all
+such valuations.
+
+But nobody bothers to do this, because the tautologies are the same
+regardless of which nonempty set $X$ you use.  So there is no reason
+to bother with any $X$ bigger than one element, with $\top = X$ and
+$\bot = \{\}$.    
+
+Subsets of $X$ form a boolean algebra, in which the boolean operations
+are set union and set intersection.  But classical logic is faithfully
+modeled by the simple boolean algebra with only two elements.
+
+In intuitionistic logic, the situation is somewhat different.  Many
+formulas are theorems of classical logic but not of intuitionistic
+logic.  The most well-known example is probably $\neg p\vee p$.
+This gets the value $\top$ for all boolean algebra valuations, but it
+is not a theorem of intuitionistic logic.  So boolean algebras are not
+faithful models of intuitionistic logic.  Other important examples of
+formulas that are classical tautologies but that are not theorems of
+intuitionistic logic are $\neg\neg p\imp p$ and $((p\imp q)\imp p)\imp
+p$.
+
+Intuitionistic logic cannot be modeled by boolean algebras.  Instead,
+one can model intuitionistic logic with a generalization of boolean
+algebras called {\em Heyting algebras\/}.  But no finite Heyting
+algebra suffices: to model formulas with up to $n$ variables requires
+a Heyting algebra of size at least $2^{2^n}$.
+
+But there is a simple example of an infinite Heyting algebra that does
+successfully model intuitionistic logic.  One takes the values of
+propositional variables to be subsets of $\R$, then extends this to a
+valuation on all formulas as follows:
+
+\begin{itemize}
+\item$ v(f\vee g) = v(f)\cup v(g)$
+\item$ v(f\wedge g) = v(f)\cap v(g)$
+\item$ v(f\imp g) = \inter{(\comp{v(f)} \cup v(g))}$
+\item$ v(\neg f) = \intercomp{v(f)}$
+\end{itemize}
+
+The notation $\comp{F}$ here means the complement of the set
+$F$, and $\inter{F}$ means the topological interior of the
+set $F$.
+The value given to
+$f\imp g$ is the {\em topological interior\/} of the set of points
+that are  either in $v(g)$ or not in $v(f)$.  
+
+With this definition of valuation, theorems of intuitionistic logic
+are precisely the formulas which are assigned a value of $\R$ by every
+valuation. 
+
+For example, one can show that every valuation of $\neg(p\wedge\neg
+p)$ is $\R$.  Suppose $v(p)$ is some set $P\subset\R$.  Then
+$v(\neg(p\wedge\neg p)) = \intercomp{(P\cap\intercomp P)}$.  But
+$\intercomp P \subset \comp P$, so $P\cap\intercomp P \subset
+P\cap\comp P = \varnothing$.  Then $v(\neg(p\wedge\neg p)) =
+\intercomp\varnothing = \inter\R = \R$, regardless of what set $P$ was
+assigned as the value of of $p$.  Thus $\neg(p\wedge\neg p)$ is a
+tautology, and it is indeed a theorem of intuitionistic logic.
+
+On the other hand, $\neg p\vee p$, which is not a theorem, is not a tautology.
+Say that $v(p)$ is $(0, \infty)$, the positive reals.  Then $v(\neg p\vee p)
+= v(\neg p) \cup v(p)
+= \intercomp{(0, \infty)} \cup (0, \infty)
+= \inter{(-\infty, 0]}    \cup (0, \infty) 
+= (-\infty, 0)            \cup (0, \infty)
+\ne\R$.
+
+This is the intuitionistic analogue of the truth-table method. For
+more complete details about this, see S{\oslash}rensen and Urzyczyn,
+{\em Lectures on the Curry-Howard Isomorphism\/}, sections 2.3--4.
+
+\subsection*{The compactness principle}
+
+An important theorem of model theory is the so-called ``compactness
+principle''.  Suppose you have an infinite set of axioms,
+which are sentences of first-order logic.  And suppose there is a
+model for any finite subset of these axioms.  The compactness
+principle says there must also be a model for the entire set of
+axioms, and so the axioms must be consistent.
+
+Since I didn't go into detail about compactness, I can't discuss this
+in detail.  But the models can be taken to be boolean algebras, which
+are themselves examples of compact topological spaces.  (The topology
+is that {\em every\/} subset of the space is open; such spaces are
+called ``discrete''.)
+
+If one has models for some subsets of the axioms, then one can exhibit
+a model for the union of these subsets: it is the product of the
+topological spaces that are models for the subsets.  But this only
+works if one can interpret this product space as a boolean algebra.
+This requires that the product of compact topological spaces be
+compact, which is called the Tychonoff theorem.
+
+Here is an important application of the compactness principle, which
+also illustrates why it might be surprising.  Consider the usual
+axioms of the real numbers, such as $\forall a,b : a+b = b+a$;
+$\forall x,y : \exists z : x\cdot z > y$, and so on.  Add to these
+axioms the following infinite set of axioms concerning the constant
+$\epsilon$: $\epsilon < 1$, $\epsilon < \frac12$, $\epsilon <
+\frac13$, and so on. Still no problem.  Now add $\epsilon > 0$.
+
+Clearly there is a model for any finite subset of these.
+Because any finite subset of these axioms is required only to satisfy
+some of the usual properties of $\R$, plus the requirement that
+$\epsilon < \frac1n$ for some integer $n$, plus possibly that
+$\epsilon$ is positive.  So take the model to be $\R$, and $\epsilon =
+\frac1{n+1}$.
+
+But by the compactness principle, there must be a model for all of the
+axioms at once, and here $\R$ will not do, because there is no such
+$\epsilon$ in $\R$.  
+
+So the compactness principle tells us that there must be a model that
+satisfies all the usual properties of $\R$, but which also has an
+infinitesimal element $\epsilon$ which is still positive, but smaller
+than $\frac1n$ for every integer $n$.  And since there is a model for
+this set of axioms, they must be consistent.  The compactness principle
+proves immediately that the existence of an infinitesimal number
+$\epsilon$ is not inconsistent with the other properties of the reals.
+
+What we get in this case is called the {\em hyperreals\/} or {\em
+  nonstandard reals\/}, the subject of the branch of mathematics
+called {\em nonstandard analysis\/}.  
+
+\subsection*{Monads are closure operators}
+
+The topological closure operator satisfies the following properties:
+
+\begin{enumerate}
+  \item $S\subset\clos S$
+  \item $\closclos S\subset \clos S$
+  \item $(S\subset T) \rightarrow (\clos S\subset\clos T)$
+\end{enumerate}
+
+Analogously, monads in Haskell are required to support the following
+functions:
+
+\begin{enumerate}
+  \item {\tt return :: s -> M s }
+  \item {\tt join :: M M s -> M s }
+  \item {\tt fmap :: (s -> t) -> (M s -> M t)}
+\end{enumerate}
+
+(They are also required to support a `bind' operation called
+\bind, but {\tt a~\bind~b} = {\tt join (fmap b a)} and {\tt join~x} =
+{\tt  x \bind\ id}, so the two formulations
+are equivalent.)  
+
+Categorially, these are instances of the same structure, called a {\em
+  Kleisli triple\/} or often just a {\em monad\/}.  More formally, a
+monad is a functor (in the category-theory sense) equipped with
+two natural transformations.  In the programming language category,
+the endofunctor is a type constructor; in the topological space
+category it is a closure operator.  The natural transformations
+manifest themselves in the programming language category as the {\tt
+  join} and {\tt return} functions, and in the topological space
+category as the required closure properties.
+
+Categorial monads were first studied because of their connections with
+topological closure operators.  Their significance in programming
+languages only became clear later on.  Closure operators were earlier
+shown by Kuratowski to be fundamental to topological spaces: there is
+an equivalent formulation of topological spaces in terms of closure
+operators instead of in terms of open sets.
+
+There's also a close connection between topological closure operators
+and modal operators in modal logic, but I don't know yet what it is.
+
+\section*{Further reading}
+
+A standard and commonly recommended text is {\em Topology\/}, by James
+Munkres.  I think it's one of those books that is confusing and
+obscure even when you already know what it's going to say, but a lot
+of people do seem to like it.
+
+My own favorite is {\em General Topology\/}, by John~L. Kelley.  It's
+extremely terse, but always clear and pithy.  The appendix contains a
+brilliantly clear exposition of axiomatic set theory, if you're
+interested in that.
+
+As usual, the {\em Schaum's Outline\/} series volume is clear, direct,
+and unpretentious.  It's declass\'e, but so are these notes.
+
+\end{document}
+

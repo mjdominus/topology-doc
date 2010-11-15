@@ -1,0 +1,39 @@
+Short Introduction to Topology
+
+  (For Computer Science Grad Students)
+
+   (and other people who don't give a crap about topology
+
+
+**DRAFT** version 0.6
+
+Mark Jason Dominus (mjd@plover.com)
+
+==WARNING==
+
+This document is a *draft*, circulated only to attract comment and
+correction.  It contains numerous errors of fact, vague
+overgeneralizations, and misleading implications.  Many claims about
+general topological spaces in fact apply only to Hausdorff spaces.
+Much of the Applications section should be considered placeholders
+that bear only a vague resemblance to the correct, accurate
+explanations.  Readers not already familiar with topology may come
+away with severe misapprehensions.  Do not rely on it for anything.
+
+Please send comments, suggestions, and corrections to the author at
+mjd@plover.com.
+
+Please do not distribute this draft after 15 December, 2010.  The most
+recent version is available at http://blog.plover.com/math/topology-doc.html .
+
+==WHAT==
+
+Topology is the branch of mathematics that tries to understand
+continuity and continuous functions.  You probably don't need to know
+much topology for your CS degree, but people will bring it up from
+time to time.  For example, you will hear in your category theory
+class that topological spaces form a category with continuous
+functions as the arrows.  Or you will hear that certain topological
+spaces are natural models for intuitionistic logic.  The goal of these
+notes is to be the minimal explanation of topology that will enable
+you to understand those two things.
