@@ -280,7 +280,7 @@ an open ball is a closed ball.
 
 \Exercise. The closure of a set is a closed set.
 
-\Exercise. if $S$ is a closed set, then $\clos S = S$.
+\Exercise. If $S$ is a closed set, then $\clos S = S$.
 
 \Exercise. Every closed set $S$ is the closure of some set $S'$. 
 
@@ -312,11 +312,11 @@ Now conversely, suppose $H$ is a closed set and $G$ is its
 complement.  I want to show that $G$ is open.  For each $p\in G$, $p$
 is not a limit point of $H$, so there is some open set $G_p$ that
 contains $p$ and does not intersect $H$.  Since each $G_p$ is disjoint
-from $H$, each is a subset of $G$.   Let $G'=\bigcup G_p$.  $G'$ is a
-union of open sets, so is open.
+from $H$, each is a subset of $G$.   Let $G'=\bigcup G_p$.  
 $G'\subset G$, because $G'$ is a union of subsets of $G$.  
 $G\subset G'$ because $p\in G_p\subset G'$ for each $p\in G$.
-So $G=G'$, and since $G'$ is open, so is $G$.
+So $G=G'$.  $G'$ is a
+union of open sets, and thus is open, and therefore so is $G$.
 
 \begin{itemize}
 \Exercise. The closure of a set $S$ is the smallest closed set $C$
@@ -357,8 +357,7 @@ that are limit points of both $S$ and its complement.
 1\}$ in $\R^3$ is the sphere  $\{(x,y,z) : x^2 + y^2 + z^2 = 1\}$.   So
 is the boundary of the closed ball. 
 
-\Exercise. The boundary of an open set $S$ is the intersection of the
-closure of $S$ and the closure of the complement of $S$.
+\Exercise. The boundary of an open set $S$ is $\clos S - S$.
 
 \end{itemize}
 
