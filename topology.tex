@@ -12,7 +12,7 @@
 \def\cat#1{{\bf #1}}
 \def\ball#1#2{B_{#1}({#2})}
 \newcounter{exercisecounter}\setcounter{exercisecounter}{1}
-\def\Exercise.#1\par{{\item\small {\bf Exercise \number\theexercisecounter}.#1\addtocounter{exercisecounter}{1}}}
+\def\Exercise.#1\par{{\item\small \makebox{\bf Exercise \number\theexercisecounter.\hspace{0.5em}}\unskip\ignorespaces#1\addtocounter{exercisecounter}{1}}}
 
 % \def\comp#1{{#1}^C}
 % \def\inter#1{{#1}^\circ}
