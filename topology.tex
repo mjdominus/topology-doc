@@ -1,7 +1,6 @@
 
 \documentclass{article}
 \usepackage{amsmath, amssymb}
-\input{catmacros.tex}
 
 \title{Short Introduction to Topology\\{\small For Computer
     Science Grad Students\\\tiny and other people who don't give a crap
@@ -10,6 +9,7 @@
 
 \def\R{{\mathbb R}}
 \def\Rn{{\R^n}}
+\def\cat#1{{\bf #1}}
 \def\ball#1#2{B_{#1}({#2})}
 \newcounter{exercisecounter}\setcounter{exercisecounter}{1}
 \def\Exercise.#1\par{{\item\small {\bf Exercise \number\theexercisecounter}.#1\addtocounter{exercisecounter}{1}}}
@@ -595,7 +595,7 @@ Say that $v(p)$ is $(0, \infty)$, the positive reals.  Then $v(\neg p\vee p)
 \ne\R$.
 
 This is the intuitionistic analogue of the truth-table method. For
-more complete details about this, see S{\oslash}rensen and Urzyczyn,
+more complete details about this, see S\o rensen and Urzyczyn,
 {\em Lectures on the Curry-Howard Isomorphism\/}, sections 2.3--4.
 
 \subsection*{The compactness principle}
