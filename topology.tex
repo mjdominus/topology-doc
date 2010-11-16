@@ -186,6 +186,14 @@ terms of Dedekind cuts, you should be able to see this.}
 % normal spaces my formulation is equivalent.  Should I mention this?
 % Maybe in a footnote?
 
+% David Radcliffe said:
+%  Your definition of separation is wrong. You need X' \cap Y' \cap S =
+%  \emptyset. Disjointness of X' and Y' cannot be guaranteed. For
+%  example, {1,2} is a disconnected subset of N with the
+%  finite-complement topology, but 1 & 2 cannot be separated by open
+%  nbhds.
+% Better follow this up!
+
 So let's define a connected set: A {\em separation} of a set $S$ is a
 partition of $S$ into two nonempty disjoint parts, $X$ and $Y$, such that there
 are disjoint open sets $X'$ and $Y'$ with $X\subset X'$ and $Y \subset
@@ -254,6 +262,9 @@ points of $S$.  0 is indeed the limit of the sequence $\left< 1, \frac12,
 
 \begin{itemize}
 \Exercise. A finite subset of $\R^n$ has no limit points.
+
+% David Radcliffe points out that the following claim is false, since
+% it fails for constant sequences.  Can it be fixed?
 
 \Exercise. If $S$ is a sequence in $\Rn$ that converges to $p$, then $p$
 is a limit point of the range of $S$.
