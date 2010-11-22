@@ -1,0 +1,85 @@
+Date: Sun, 21 Nov 2010 18:17:14 +0100
+Subject: some comments
+From: [ Anonymous by request ]
+
+Hello Mark Dominus,
+
+I noticed your post on topology on Planet Haskell, and, since I am a
+(algebraic) topologist, I couldn't help reading and commenting your
+introduction to topology.
+
+Regards!
+
+
+Connected sets :
+****************
+
+1. It seems curious (and wrong) to define the connectedness of a set,
+when you are talking about a topological space.  I assume that you
+want to simplify your introduction, but it hurts my eyes badly (yes, I
+am a very sensitive mathematician) Is it because you want to avoid
+mentioning subspaces?  In my opinion, it makes it more difficult for a
+student to not give proper and complete definitions. The same remark
+applies for the rest of the document.  Talking about the closure of a
+set, or the boundary of a set does not make sense...
+
+2. You define a separation of a set as a partition of S into two
+disjoint parts X and Y, but you do not require that they should be non
+empty.  According to your definition, every "set" A is disconnected :
+take X = A and Y = emptyset.  Then Y is open, and X is included into
+the full ambient space, which is open.
+
+3. Exercise 1 seems wrong.  The empty set is connected.  Also, any
+singleton {a} in R is connected.
+
+Limits
+******
+
+4. (opinion) Exercise 11 doesn't seem very interesting to me. It is
+immediate from exercise 10.
+
+5. Your definition of a "dense" subset seems very imprecise~: what
+does "many" means?  Besides, it seems wrong when you have some
+discrete spaces.  For exemple, the integers Z are dense in the
+integers Z, but your definition excludes those cases.
+
+Continuity
+**********
+
+6. What does exercise 28 means?  You didn't define what an open
+function is.  I guess that you meant "The image of an open set by a
+continuous function is not necessarily open", or something along that
+line.
+
+7. Continuity on R^n?  I guess that you should rewrite that as
+"continuity of functions from R^n to R^p".
+
+Homeomorphic spaces
+*******************
+
+8. End of the first paragraph : shouldn't it be "is an homeomorphism"
+instead of "is a homeomorphism"?
+
+
+Applications
+The category of topological spaces
+**********************************
+
+9. The fundamental group of a space is not really a property.  I would
+describe it as an invariant, or a topological invariant.
+
+10.  The loops are not considered equivalent if they can be smoothly
+transformed into each other.  We don't require a smooth structure.
+The correct notion is homotopy, or "continuously transformed into each
+other" (emphasis on continuously!).
+
+11. You say that the choice of the base point doesn't matter for
+connected sets.  That is incorrect, it doesn't matter for path
+connected sets.  You can have somme connected sets which are not path
+connected, and in this case, the choice very much matter.
+
+12.  The usual definition of a simply connected space require also
+that it has only 1 path component (\pi_0(X) = \pi_1(X) = 0)
+
+13.  Technically, the fundamental group functor goes from Top_\ast
+(the POINTED topological spaces) to Grp, not from Top to Grp.
